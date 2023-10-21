@@ -1,0 +1,87 @@
+---
+title: "SpotifyPlaylist"
+author: "Alberto"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Including the data
+
+```{r}
+library(readxl)
+DataSet <- read_excel("WorldData2023.xlsx")
+View(DataSet)
+```
+
+#Initial check of the data: In order to see if the data is valid to study the reasons why a playlist is the first one in spotify we'll look at the data of the playlist chosen for the year 2000.
+
+##Create the frequency and relative frequency tables for the data
+
+```{r}
+GDP = DataSet$GDP
+
+#Check the popularity of the tracks in that year
+ABStable <- table(GDP)
+RELtable <- prop.table(ABStable)
+ABStable
+RELtable
+```
+
+```{r}
+library(ggplot2)
+suppressWarnings(library(ggplot2))
+for (name in names(DataSet)) {
+    variable <- DataSet[[name]]
+    FPlot <- ggplot(DataSet, aes(x = variable)) +
+      geom_histogram(alpha = 0.7, fill = "darkgreen", color = "black") +
+      geom_boxplot(alpha = 0.9, fill = "green", color = "black") +
+      labs(title = sprintf("Distribution of %s", name), x = sprintf("%s", name), y = "Frequency")
+    
+    print(FPlot)
+  }
+
+
+```
+```{r}
+#NDataSet = DataSet[Popularity >50,]
+NDataSet = DataSet
+for (name in names(NDataSet)) {
+    variable = NDataSet[[name]]
+    SPlot = plot(GDP,variable, xlab = "GDP", ylab = sprintf("%s", name))
+    print(SPlot)
+  
+    RegressionModel <- lm(GDP ~ variable, data=NDataSet)
+    abline(RegressionModel)
+  }
+
+```
+
+```{r}
+#cov(NDataSet$track_popularity, NDataSet$energy)
+cov(NDataSet)
+#cor(NDataSet$track_popularity, NDataSet$energy)
+cor(NDataSet)
+```
+
+
+
+```{r}
+#View(NDataSet)
+for (name in names(NDataSet)) {
+    variable = NDataSet[[name]]
+    RegressionModel <- lm(GDP ~ variable, data=NDataSet) 
+    par(mfrow=c(2,2)) 
+    plot(RegressionModel)    
+  }
+
+```
+
+```{r}
+
+
+```
+
