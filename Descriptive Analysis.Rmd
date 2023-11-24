@@ -83,15 +83,14 @@ cor(DataSet,use = "complete.obs")
 ```
 
 
-
-```{r}
-#View(NDataSet)
-for (name in names(NDataSet)) {
-    variable = NDataSet[[name]]
-    RegressionModel <- lm(GDP ~ variable, data=NDataSet) 
-    par(mfrow=c(2,2)) 
-    plot(RegressionModel)    
-  }
-
+```{r message=FALSE, warning=FALSE}
+suppressWarnings(library(summarytools))
+descr(DataSet$GDP)
+hist(DataSet$GDP,
+     probability = TRUE, # histogram has a total area = 1
+     xlab = "GDP") 
+curve(dnorm(x, mean(DataSet$GDP), sd(DataSet$GDP)), 
+      col="blue", lwd=2, add=TRUE, yaxt="n")
+curve(dnorm(x,mean(DataSet$GDP),sd(DataSet$GDP)), col = "red", lwd = 2, add = TRUE, yaxt = "n" )
 ```
 

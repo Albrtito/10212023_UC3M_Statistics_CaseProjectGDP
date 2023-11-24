@@ -15,7 +15,7 @@ The aim of this practice is to assign a probability model to a sample dataset in
 
 The usual way to perform the distribution fitting is the following. We start from a data sample and we compare its empirical distribution with the one of known models (Normal, Poisson, Exponential, etc). To evaluate the goodness-of-fit of a model we will make the Chi-squared test.
 
-In the following we will use the data contained in the file `TiempoaccesoWeb.xlsx`. We start by analyzing the variable `Ordenador_Uni` in the file `TiempoAccesoWeb.xlsx`. This variable contains 55 measurements of times, measured in seconds, that are the times needed to access to the University UC3M’s web page from a computer of its library. Starting from this set of data, we want to find a probability model that well describes the population of the accessing times necessary to access from a computer of the library the web page of the University UC3M. Afterwards we analyze the variable `tiempo` of the file `AlumnosIndustriales.xlsx` that contains measurements of the time spent by a group of students to get to the University.
+In the following we will use the data contained in the file `TiempoaccesoWeb.xlsx`. We start by analyzing the variable `Ordenador_Uni` in the file `TiempoAccesoWeb.xlsx`. This variable contains 55 measurements of times, measured in seconds, that are the times needed to access to the University UC3M's web page from a computer of its library. Starting from this set of data, we want to find a probability model that well describes the population of the accessing times necessary to access from a computer of the library the web page of the University UC3M. Afterwards we analyze the variable `tiempo` of the file `AlumnosIndustriales.xlsx` that contains measurements of the time spent by a group of students to get to the University.
 
 # 2. Model fitting. Variable `Ordenador_Uni`
 
@@ -33,7 +33,6 @@ TiempoAccesoWeb <- read_excel("TiempoAccesoWeb.xlsx")
 
 ![](TiempoAccesoWeb.jpg)
 
-
 ```{r message=FALSE, warning=FALSE}
 suppressWarnings(library(summarytools))
 descr(TiempoAccesoWeb$Ordenador_Uni)
@@ -44,14 +43,13 @@ curve(dnorm(x, mean(TiempoAccesoWeb$Ordenador_Uni), sd(TiempoAccesoWeb$Ordenador
       col="blue", lwd=2, add=TRUE, yaxt="n")
 ```
 
-
-We can appreciate that the histogram looks like a Normal density function. Indeed it is unimodal and quite symmetric (`Skewness = 0.08`) but its bell is not exactly like the Gauss’ one (`Kurtosis = -0.29`). From this we can deduce that a normal distribution could fit well our data and so it could be a good model for the population we are studying.
+We can appreciate that the histogram looks like a Normal density function. Indeed it is unimodal and quite symmetric (`Skewness = 0.08`) but its bell is not exactly like the Gauss' one (`Kurtosis = -0.29`). From this we can deduce that a normal distribution could fit well our data and so it could be a good model for the population we are studying.
 
 ## 2.2 Diagnosis of the chosen model
 
 To evaluate the goodness of the fitted model we can use the Chi-squared test. We should remember that the Chi-squared test is a discrepancy measure among the observed and expected number of observations in a given partition
 
-\[\sum_{i=1}^{k} \frac{(O_i-E_i)^2}{E_i},\]
+$$\sum_{i=1}^{k} \frac{(O_i-E_i)^2}{E_i},$$
 
 where $k$ is the number of intervals or cells in the partition, $O_i$ is the number of observations that are in $i$-th cell and $E_i$ is the expected number of observations in the same cell.
 
@@ -62,9 +60,9 @@ Partition <- hist(TiempoAccesoWeb$Ordenador_Uni, plot = FALSE)
 Partition
 ```
 
-The component `breaks` of `Partition` gives the points that define the intervals in the histogram. That is, the six intervals in the partition are $(1.1, 1.2]$, $(1.2, 1.3]$, $(1.3, 1.4]$, $(1.4, 1.5]$, $(1.5, 1.6]$ and $(1,6, 1.7]$. The component `counts` gives the number of observations inside each interval or cell. This are the **observed**, $O_i$. 
+The component `breaks` of `Partition` gives the points that define the intervals in the histogram. That is, the six intervals in the partition are $(1.1, 1.2]$, $(1.2, 1.3]$, $(1.3, 1.4]$, $(1.4, 1.5]$, $(1.5, 1.6]$ and $(1,6, 1.7]$. The component `counts` gives the number of observations inside each interval or cell. This are the **observed**, $O_i$.
 
-It should be noted that the above partition does not cover all $\mathbb{R}$ since intervals $(-\infty, 1.1]$ and $(1.7, +\infty)$ are not considered. We will assume that the first interval of the partition is $(-\infty, 1.2]$ and the last interval is $(1.6, +\infty)$. 
+It should be noted that the above partition does not cover all $\mathbb{R}$ since intervals $(-\infty, 1.1]$ and $(1.7, +\infty)$ are not considered. We will assume that the first interval of the partition is $(-\infty, 1.2]$ and the last interval is $(1.6, +\infty)$.
 
 Next, we fit the normal model to `Ordenador_Uni`
 
@@ -74,8 +72,7 @@ normalfit <- fitdist(TiempoAccesoWeb$Ordenador_Uni, "norm")
 normalfit
 ```
 
-The estimated parameters for the Normal random variable are in our case $\widehat{\mu} = 1.42481818$ and $\widehat{\sigma} =  0.12389484$ that are equal to the corresponding values shown in the descriptive analysis of the variable. Therefore the fitted model is
-\[X \sim \mathcal{N}(1.42481818, 0.12389484).\]
+The estimated parameters for the Normal random variable are in our case $\widehat{\mu} = 1.42481818$ and $\widehat{\sigma} = 0.12389484$ that are equal to the corresponding values shown in the descriptive analysis of the variable. Therefore the fitted model is $$X \sim \mathcal{N}(1.42481818, 0.12389484).$$
 
 Finally, we perform a diagnosis test to appreciate the goodness of our fitting. We should calculate the expected number of observations under the *fitted* normal distribution
 
@@ -89,28 +86,27 @@ chisq.test(Partition$counts, p = Probabilities)
 
 The result of the Chi-squared test can be resumed in the following three quantities
 
-* The calculated test statistic, `X-squared` $= \sum_{i=1}^{k} \frac{(o_i-e_i)^2}{e_i}$, where $o_i$ is the number of observations in the sample that are in $i$-th cell and $e_i$ is the expected number of observations in the same cell.
+-   The calculated test statistic, `X-squared` $= \sum_{i=1}^{k} \frac{(o_i-e_i)^2}{e_i}$, where $o_i$ is the number of observations in the sample that are in $i$-th cell and $e_i$ is the expected number of observations in the same cell.
 
 > This statistic summarizes the relation between the histogram and the continuous curve of the density function. The bigger is its value the worse is the goodness of the fit of the chosen theoretical model.
 
-* `df` (degrees of freedom), represents the parameter of the selected Chi-squared distribution and it is used as a reference point to appreciate the quality of the fitting.
+-   `df` (degrees of freedom), represents the parameter of the selected Chi-squared distribution and it is used as a reference point to appreciate the quality of the fitting.
 
-> + The degrees of freedom at the `chisq.test` function are computed as `df` $= k - 1$ since it does not takes into account the number of estimated parameters.
+> -   The degrees of freedom at the `chisq.test` function are computed as `df` $= k - 1$ since it does not takes into account the number of estimated parameters.
 
-> + The degrees of freedom must be computed as `df` $= k - p - 1$, where $p$  is the number of unknown parameters of the model that are estimated using the data sample, in this case it is equal to 2 (the mean and the variance).
+> -   The degrees of freedom must be computed as `df` $= k - p - 1$, where $p$ is the number of unknown parameters of the model that are estimated using the data sample, in this case it is equal to 2 (the mean and the variance).
 
-* `p-value` is the probability that the test statistic takes a value higher than `X-squared`. In this case it is given by the value of the area of the right-tail starting from 2.625 calculated with the density function of a Chi-squared distribution with `df` degrees of freedom.
+-   `p-value` is the probability that the test statistic takes a value higher than `X-squared`. In this case it is given by the value of the area of the right-tail starting from 2.625 calculated with the density function of a Chi-squared distribution with `df` degrees of freedom.
 
-> * Notice that `df = 5` corresponds to number of cells minus one, $k-1$, but we estimate two parameters, so we should to use a $\chi^2$ distribution with `df = 3`, $k - p - 1$.
+> -   Notice that `df = 5` corresponds to number of cells minus one, $k-1$, but we estimate two parameters, so we should to use a $\chi^2$ distribution with `df = 3`, $k - p - 1$.
 
->```{r}
->pchisq(2.5646, 3, lower.tail = FALSE)
->```
+> ```{r}
+> pchisq(2.5646, 3, lower.tail = FALSE)
+> ```
 
-> That is, the correct `p-value` $= 0.4637294$. 
+> That is, the correct `p-value` $= 0.4637294$.
 
-If the `p-value` is less than 0.05 we assume that it is quite improbable to obtain the resulting value of the test statistic if the model were good. Therefore we conclude that the test is unsatisfactory. On the other hand if the `p-value` is bigger than 0.05 we conclude that the fit is relatively good
-and that the chosen model can be considered reasonable to represent the population. 
+If the `p-value` is less than 0.05 we assume that it is quite improbable to obtain the resulting value of the test statistic if the model were good. Therefore we conclude that the test is unsatisfactory. On the other hand if the `p-value` is bigger than 0.05 we conclude that the fit is relatively good and that the chosen model can be considered reasonable to represent the population.
 
 In our case the pvalue is equal to 0.4637294 and therefore we conclude that the normal model is a reasonable model to represent our population.
 
@@ -118,11 +114,11 @@ In our case the pvalue is equal to 0.4637294 and therefore we conclude that the 
 
 The chi-square test is usually not recommended for testing the hypothesis of normality due to its inferior power properties compared to other tests. There are many functions in \textsf{R} to make various different goodness-of-fit tests. All of them may be interpreted by looking at the p-values in the same way we have done by looking at the Chi-squared test. In particular, the package `nortest` includes the following:
 
-* `ad.test`: Anderson-Darling test
-* `cvm.test`: Cramer-von Mises test
-* `lillie.test`:  Kolmogorov-Smirnov-Lilliefors test
-* `pearson.test`: Pearson chi-square test for normality
-* `sf.test`: Shapiro-Francia test
+-   `ad.test`: Anderson-Darling test
+-   `cvm.test`: Cramer-von Mises test
+-   `lillie.test`: Kolmogorov-Smirnov-Lilliefors test
+-   `pearson.test`: Pearson chi-square test for normality
+-   `sf.test`: Shapiro-Francia test
 
 For example, it is possible to check that the p-values corresponding to these tests are bigger than 0.05 too, thus corroborating our selection of the Normal model.
 
@@ -176,7 +172,7 @@ weibullfit <- fitdist(AlumnosIndustriales$tiempo, "weibull")
 weibullfit
 ```
 
-Now, we will obtain the observed and the expected number of observations in the intervals defined by the default histogram. 
+Now, we will obtain the observed and the expected number of observations in the intervals defined by the default histogram.
 
 ```{r}
 Partition <- hist(AlumnosIndustriales$tiempo, plot = FALSE)
@@ -220,7 +216,7 @@ Expected = length(AlumnosIndustriales$tiempo)*Probabilities
 chisq.test(Partition$counts, p = Probabilities)
 ```
 
-It looks clear that this fitting is no such good as the one before. The p-value obtained by the Chi-squared test is very low. In fact, the `p-value` is smaller since we should use `pchisq(16.15, 3, lower.tail = FALSE)`. 
+It looks clear that this fitting is no such good as the one before. The p-value obtained by the Chi-squared test is very low. In fact, the `p-value` is smaller since we should use `pchisq(16.15, 3, lower.tail = FALSE)`.
 
 ```{r}
 plot(lognormalfit)
@@ -251,7 +247,7 @@ The `p-value` taking into account that two parameters were estimated is
 pchisq(9.3823, 7, lower.tail = FALSE)
 ```
 
-which is bigger than 0.05. 
+which is bigger than 0.05.
 
 ```{r}
 hist(sqrt(AlumnosIndustriales$tiempo), 
@@ -292,8 +288,7 @@ We can conclude that the probability that a student lives at a distance of more 
 
 # 4.2 Computation using the Normal model applied to the square-root of the variable
 
-As seen above, the square root can be well fitted to a Normal distribution. To compute the probability that the student takes more than 60 minutes to get at the University it is equivalent to compute the probability that the square root of the spent time is more than $\sqrt(60) = 7.745967$ (measured as square-root of minutes). The Normal distribution that better fits our data has the
-following estimated parameters: `mean` = 6.1169314 and `sd` = 2.0010506.
+As seen above, the square root can be well fitted to a Normal distribution. To compute the probability that the student takes more than 60 minutes to get at the University it is equivalent to compute the probability that the square root of the spent time is more than $\sqrt(60) = 7.745967$ (measured as square-root of minutes). The Normal distribution that better fits our data has the following estimated parameters: `mean` = 6.1169314 and `sd` = 2.0010506.
 
 We can then compute the required probability for this distribution by
 
@@ -311,5 +306,3 @@ lines(0:130, pweibull(0:130, shape = 1.7088275, scale = 46.3508101), col="red")
 lines(0:130, pnorm(sqrt(0:130),  mean = 6.1169314, sd = 2.0010506), col="blue")
 
 ```
-
-
